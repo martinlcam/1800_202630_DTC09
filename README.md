@@ -67,7 +67,7 @@ elmo-hikes/
 
 ## Contributors
 - Ethan Chin - BCIT CST Student. Fun fact: Likes drawing.
-- **Teamates name** - BCIT CST Student, Frontend enthusiast with a knack for creative design. Fun fact: Has a collection of over 50 houseplants.
+- **Teamate Name** - BCIT CST Student, Frontend enthusiast with a knack for creative design. Fun fact: Has a collection of over 50 houseplants.
 
 ---
 
