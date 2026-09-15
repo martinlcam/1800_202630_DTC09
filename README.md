@@ -66,8 +66,10 @@ elmo-hikes/
 
 
 ## Contributors
-- **Your Name** - BCIT CST Student with a passion for outdoor adventures and user-friendly applications. Fun fact: Loves solving Rubik's Cubes in under a minute.
-- **Teammate Name** - BCIT CST Student, Frontend enthusiast with a knack for creative design. Fun fact: Has a collection of over 50 houseplants.
+- **Mansi** - BCIT CST Student with a passion for outdoor adventures and user-friendly applications. Fun fact: Loves solving Rubik's Cubes in under a minute.
+- **Martin Cam** - BCIT CST Student that loves video games and music. Fun fact: Has a 110 pound dog
+- **Ethan Chin** - BCIT CST Student. Fun fact: Likes drawing.
+
 
 ---
 
