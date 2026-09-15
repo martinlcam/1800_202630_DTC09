@@ -66,7 +66,7 @@ elmo-hikes/
 
 
 ## Contributors
-- **Mansi** - BCIT CST Student with a passion for outdoor adventures and user-friendly applications. Fun fact: Loves solving Rubik's Cubes in under a minute.
+- **Mansi** - BCIT CST Student with a passion for outdoor adventures.Fun fact: Loves to do clay art.
 - **Martin Cam** - BCIT CST Student that loves video games and music. Fun fact: Has a 110 pound dog
 - **Ethan Chin** - BCIT CST Student. Fun fact: Likes drawing.
 
