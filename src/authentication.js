@@ -5,7 +5,9 @@
 // -------------------------------------------------------------
 
 // Import the initialized Firebase Authentication object
-import { auth } from "/src/firebaseConfig.js";
+// and the Firestore database connection
+import { auth, db } from "/src/firebaseConfig.js";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 // Import specific functions from the Firebase Auth SDK
 import {
@@ -30,7 +32,43 @@ import {
 //   await loginUser("user@example.com", "password123");
 // -------------------------------------------------------------
 export async function loginUser(email, password) {
-  return signInWithEmailAndPassword(auth, email, password);
+  const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
+  // Make sure this user has a Firestore document. Accounts created before
+  // signup wrote documents (or whose signup write failed) would otherwise
+  // never get one. Only creates the doc when missing, so existing data is kept.
+  await ensureUserDocument(userCredential.user);
+
+  return userCredential;
+}
+
+// -------------------------------------------------------------
+// ensureUserDocument(user)
+// -------------------------------------------------------------
+// Creates the Firestore "users" document for the given Auth user
+// if it doesn't exist yet. Called on both signup and login so every
+// authenticated user always has a matching document.
+//
+// Parameters:
+//   user (object) - the Firebase Auth user object
+// -------------------------------------------------------------
+async function ensureUserDocument(user) {
+  try {
+    const userRef = doc(db, "users", user.uid);
+    const snapshot = await getDoc(userRef);
+    if (!snapshot.exists()) {
+      await setDoc(userRef, {
+        name: user.displayName || "",
+        email: user.email,
+        country: "Canada", // Default value
+        school: "BCIT"     // Default value
+      });
+      console.log("Firestore user document created.");
+    }
+  } catch (error) {
+    // Don't block login/signup if the Firestore write fails.
+    console.error("Error ensuring user document:", error);
+  }
 }
 
 // -------------------------------------------------------------
@@ -51,6 +89,12 @@ export async function loginUser(email, password) {
 export async function signupUser(name, email, password) {
   const userCredential = await createUserWithEmailAndPassword(auth, email, password);
   await updateProfile(userCredential.user, { displayName: name });
+
+  // Create the matching Firestore document for the new user.
+  // Pass the name explicitly since the local user object may not
+  // reflect the displayName set by updateProfile yet.
+  await ensureUserDocument({ uid: userCredential.user.uid, email, displayName: name });
+
   return userCredential.user;
 }
 
