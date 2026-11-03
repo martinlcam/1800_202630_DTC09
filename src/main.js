@@ -61,65 +61,59 @@ async function addTipData() {
 
 // Check if tips collection is empty
 async function seedTips() {
-  const tipsRef = collection(db, 'tips');
 
-  const querySnapshot = await getDocs(tipsRef);
+    // Get a reference to the "tips" collection
+    const tipsRef = collection(db, "tips");
 
-  if (querySnapshot.empty) {
-    console.log('Tips collection is empty. Seeding data...');
-    await addTipData();
-  } else {
-    console.log('Tips collection already contains data. Skipping seed.');
-  }
-}
-
-// Display tips dynamically
-async function displayCardsDynamically() {
-  const cardTemplate = document.getElementById('tipCardTemplate');
-  const tipsContainer = document.getElementById('tips-go-here');
-
-  if (!cardTemplate || !tipsContainer) {
-    console.error('Tip template or tips container not found!');
-    return;
-  }
-
-  try {
-    const tipsRef = collection(db, 'tips');
+    // Retrieve all documents currently in the collection
     const querySnapshot = await getDocs(tipsRef);
 
-    tipsContainer.innerHTML = '';
+    // If no documents exist, the collection is empty
+    if (querySnapshot.empty) {
 
+        console.log("Tips collection is empty. Seeding data...");
+
+        // Call function to insert default tip documents
+        addTipData();
+
+    } else {
+
+        // If documents already exist, do not reseed
+        console.log("Tips collection already contains data. Skipping seed.");
+    }
+}
+
+// Call the seeding function when the main.html page loads.
+seedTips();
+
+async function displayCardsDynamically() {
+  let cardTemplate = document.getElementById('tipCardTemplate');
+  const tipsCollectionRef = collection(db, 'tips');
+
+  try {
+    const querySnapshot = await getDocs(tipsCollectionRef);
     querySnapshot.forEach((tipDoc) => {
       // Clone the template
-      const newcard = cardTemplate.content.cloneNode(true);
+      let newcard = cardTemplate.content.cloneNode(true);
 
-      // Get tip information
+      // Get tip data once
       const tip = tipDoc.data();
 
-      // Add information to the card
+      // Populate the card with tip data
       newcard.querySelector('.card-title').textContent = tip.name;
       newcard.querySelector('.card-text').textContent = tip.details;
       newcard.querySelector('.card-category').textContent = tip.category;
 
-      // Add card to the page
-      tipsContainer.appendChild(newcard);
+      // Attach the document ID to the Read More link
+      newcard.querySelector('.read-more').href = `eachTip.html?docID=${tipDoc.id}`;
+
+      // Attach the new card to the container
+      document.getElementById('tips-go-here').appendChild(newcard);
     });
-
-    console.log('Tips displayed successfully!');
   } catch (error) {
-    console.error('Error displaying tips:', error);
+    console.error('Error getting documents: ', error);
   }
 }
 
-// Initialize tips
-async function initializeTips() {
-  try {
-    await seedTips();
-    await displayCardsDynamically();
-  } catch (error) {
-    console.error('Error initializing tips:', error);
-  }
-}
-
-// Run when page loads
-initializeTips();
+// Call the function to display cards when the page loads
+displayCardsDynamically();
