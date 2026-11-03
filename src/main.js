@@ -17,5 +17,3 @@ const showName = () => {
 };
 
 showName();
-
-sdhfaksdfhuishdfiasfwoef
