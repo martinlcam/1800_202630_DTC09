@@ -120,8 +120,8 @@ a {
     background: #ffffff;
 }
 
-/* Navbar */
-.navbar {
+/* Front Page Navbar */
+header.navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -138,14 +138,14 @@ a {
     color: #4f46e5;
 }
 
-.navbar nav {
+header.navbar nav {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     gap: 20px;
 }
 
-.navbar nav a:hover {
+header.navbar nav a:hover {
     color: #4f46e5;
 }
 
@@ -222,7 +222,7 @@ a {
 /* ===== Hamburger menu (additions only) ===== */
 
 /* Lets the hidden checkbox stay inside the navbar */
-.navbar {
+header.navbar {
     position: relative;
 }
 
@@ -257,7 +257,7 @@ a {
 
 /* Mobile only: these override the navbar rules above at 768px and under */
 @media (max-width: 768px) {
-    .navbar {
+    header.navbar {
         flex-wrap: nowrap;
         padding: 12px 20px;
     }
@@ -267,7 +267,7 @@ a {
     }
 
     /* Nav becomes a collapsed dropdown */
-    .navbar nav {
+    header.navbar nav {
         position: absolute;
         top: 100%;
         left: 0;
@@ -299,12 +299,12 @@ a {
     }
 
     /* Dropdown links */
-    .navbar nav a:not(.nav-btn) {
+    header.navbar nav a:not(.nav-btn) {
         padding: 16px 20px;
         border-top: 1px solid #e5e7eb;
     }
 
-    .navbar nav .nav-btn {
+    header.navbar nav .nav-btn {
         margin: 12px 20px;
         text-align: center;
     }
