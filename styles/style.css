@@ -119,3 +119,193 @@ a {
     border-top: 1px solid #e5e7eb;
     background: #ffffff;
 }
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px 32px;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.logo {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #4f46e5;
+}
+
+.navbar nav {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.navbar nav a:hover {
+    color: #4f46e5;
+}
+
+.nav-btn {
+    padding: 8px 16px;
+    border: 1px solid #4f46e5;
+    border-radius: 6px;
+    color: #4f46e5;
+}
+
+/* Welcome banner */
+.banner {
+    padding: 80px 24px;
+    text-align: center;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: #ffffff;
+}
+
+.banner h1 {
+    margin: 0 0 12px;
+    font-size: clamp(2rem, 5vw, 3rem);
+}
+
+.banner p {
+    margin: 0 auto;
+    max-width: 560px;
+    font-size: 1.15rem;
+    opacity: 0.9;
+}
+
+/* Call to action */
+.cta {
+    max-width: 600px;
+    margin: 48px auto;
+    padding: 40px 24px;
+    text-align: center;
+    background: #ffffff;
+    border: 2px dashed #c7d2fe;
+    border-radius: 12px;
+}
+
+.cta h2 {
+    margin: 0 0 8px;
+}
+
+.cta p {
+    margin: 0 0 24px;
+    color: #6b7280;
+}
+
+.cta-btn {
+    display: inline-block;
+    padding: 12px 28px;
+    background: #4f46e5;
+    color: #ffffff;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.cta-btn:hover {
+    background: #4338ca;
+}
+
+/* Footer */
+.footer {
+    padding: 20px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #6b7280;
+    border-top: 1px solid #e5e7eb;
+    background: #ffffff;
+}
+
+/* ===== Hamburger menu (additions only) ===== */
+
+/* Lets the hidden checkbox stay inside the navbar */
+.navbar {
+    position: relative;
+}
+
+/* Hidden checkbox that tracks open/closed */
+.menu-checkbox {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Hamburger icon: hidden on desktop */
+.menu-icon {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    padding: 10px;
+    cursor: pointer;
+    color: #4f46e5;
+}
+
+.menu-icon span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background: currentColor;
+    border-radius: 2px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Mobile only: these override the navbar rules above at 768px and under */
+@media (max-width: 768px) {
+    .navbar {
+        flex-wrap: nowrap;
+        padding: 12px 20px;
+    }
+
+    .menu-icon {
+        display: flex;
+    }
+
+    /* Nav becomes a collapsed dropdown */
+    .navbar nav {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        flex-direction: column;
+        align-items: stretch;
+        flex-wrap: nowrap;
+        gap: 0;
+        background: #ffffff;
+        max-height: 0;
+        overflow: hidden;
+        visibility: hidden;
+        transition: max-height 0.3s ease, visibility 0.3s;
+    }
+
+    /* Open state */
+    .menu-checkbox:checked ~ nav {
+        max-height: 400px;
+        visibility: visible;
+        border-bottom: 1px solid #e5e7eb;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Keyboard focus outline */
+    .menu-checkbox:focus-visible ~ .menu-icon {
+        outline: 2px solid #4f46e5;
+        outline-offset: 2px;
+    }
+
+    /* Dropdown links */
+    .navbar nav a:not(.nav-btn) {
+        padding: 16px 20px;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .navbar nav .nav-btn {
+        margin: 12px 20px;
+        text-align: center;
+    }
+}
