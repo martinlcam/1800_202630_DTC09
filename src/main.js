@@ -2,7 +2,7 @@
 // The function we want to use is called "onAuthReady" which returns the login state
 import { onAuthReady } from "/src/authentication.js";
 import { db } from '/src/firebaseConfig.js';
-import { collection, getDocs, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, getDocs, addDoc, } from 'firebase/firestore';
 
 const showName = () => {
     // Pass a CALLBACK function to run when Firebase finishes checking login status
@@ -103,6 +103,7 @@ async function displayCardsDynamically() {
       newcard.querySelector('.card-title').textContent = tip.name;
       newcard.querySelector('.card-text').textContent = tip.details;
       newcard.querySelector('.card-category').textContent = tip.category;
+      newcard.querySelector('.card-image').src = `./images/${tip.code}.png`;
 
       // Attach the document ID to the Read More link
       newcard.querySelector('.read-more').href = `eachTip.html?docID=${tipDoc.id}`;

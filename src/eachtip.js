@@ -16,13 +16,13 @@ async function displayTipInfo() {
       const tip = tipSnap.data();
 
       const name = tip.name;
-      const category = tip.category;
-      const details = tip.details;
+      const code = tip.code;
 
       // Update the page
       document.getElementById('tipName').textContent = name;
-      document.getElementById('tipCategory').textContent = category;
-      document.getElementById('tipDetails').textContent = details;
+      const img = document.getElementById('tipImage');
+      img.src = `./images/${code}.png`;
+      img.alt = `${name} image`;
     } else {
       document.getElementById('tipName').textContent = 'Tip not found.';
     }
