@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <title>My BCIT Project</title>
     <meta name="comp1800 template" content="My 1800 App">
@@ -25,27 +24,35 @@
     <!-- Main content goes here -->
     <div class="container-fluid bg-light text-dark p-5">
         <div class="container bg-light p-5">
-            <h1 class="display-4">Good morning <span id="name-goes-here">friend </span> </h1>
+            <h1 class="display-4">
+                Nice to see you, <span id="name-goes-here">friend </span>
+            </h1>
             <hr>
-            <p>Quote of the day: The best view comes after the hardest climb.</p>
         </div>
     </div>
     
+    <!-- Hikes Cards populating -->
         <div class="container-fluid bg-body text-dark p-5">
-        <h1>Tips to Detect AI-Generated Pictures</h1>
+        <h1>Useful Tips</h1>
         <div id="tips-go-here" class="row">
         </div>
     </div>
+
     <template id="tipCardTemplate">
-    <div class="col-md-6 col-lg-3">
-      <div class="card h-100 p-3">
-        <img class="card-img-top card-image" src="..." alt="tip Image">
-        <h5 class="card-title"></h5>
-        <p class="card-text"></p>
-        <p class="card-category"></p>
-        <a class="btn btn-light bg-info read-more" href="#">Read More</a>
-    </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card">
+                <img class="card-img-top card-image" src="..." alt="Tip Image">
+                <i class="bi bi-heart text-danger fs-4 fav-btn position-absolute top-0 end-0 m-2" role="button" title="Favourite"></i>
+                <div class="card h-100 p-3">
+                    <h5 class="card-title"></h5>
+                    <p class="card-text"></p>
+                    <p class="card-category"></p>
+                    <a class="btn btn-light bg-info read-more" href="#">Read More</a>
+                </div>
+            </div>
+        </div>
     </template>
+
     <!-- our own footer goes here -->
     <site-footer></site-footer>
     
@@ -55,7 +62,5 @@
 
     <script type="module" src="/src/app.js"></script>
     <script type="module" src="/src/main.js"></script>
-
 </body>
-
 </html>

@@ -1,120 +1,123 @@
-// Import the file that has the authentication helper function we want to use.
-// The function we want to use is called "onAuthReady" which returns the login state
 import { onAuthReady } from "/src/authentication.js";
-import { db } from '/src/firebaseConfig.js';
-import { collection, getDocs, addDoc, } from 'firebase/firestore';
+import { db } from "/src/firebaseConfig.js";
+import {
+  collection, getDocs, addDoc, serverTimestamp,
+  doc, getDoc, setDoc, arrayUnion, arrayRemove
+} from "firebase/firestore";
 
-const showName = () => {
-    // Pass a CALLBACK function to run when Firebase finishes checking login status
-    onAuthReady((user) => {  // Firebase passes the user object (or null)
-        if (user) {
-            // User is logged in
-            const name = user.displayName || user.email;  // Use email if name is missing
-            document.getElementById("name-goes-here").textContent = name + "!";
-        } else {
-            // User is NOT logged in
-            location.href = "index.html";  // Redirect to login page
-        }
-    });
-};
+let currentUser = null;
+let favourites = [];
 
-showName();
+function showName(user) {
+  const name = user.displayName || user.email;
+  const el = document.getElementById("name-goes-here");
+  if (el) el.textContent = name + "!";
+}
 
-// Add sample tip documents to Firestore
 async function addTipData() {
-  const tipsRef = collection(db, 'tips');
-
-  console.log('Adding sample tip data...');
-
-  await addDoc(tipsRef, {
-    code: 'tip1',
-    name: 'Check Image Details',
-    category: 'Fake',
-    details: 'Look for blurry edges, distorted objects, unusual fingers, or unnatural lighting.',
-  });
-
-  await addDoc(tipsRef, {
-    code: 'tip2',
-    name: 'Verify the Image Source',
-    category: 'Real',
-    details: 'Check whether the image comes from a trusted website or reliable source.',
-  });
-
-  await addDoc(tipsRef, {
-    code: 'tip3',
-    name: 'Look for AI Signs',
-    category: 'Fake',
-    details:
-      'AI-generated images may have unusual backgrounds, strange reflections, or inconsistent details.',
-  });
-
-  await addDoc(tipsRef, {
-    code: 'tip4',
-    name: 'Reverse Image Search',
-    category: 'Real',
-    details:
-      'Use reverse image search to find the original image and check where it was published.',
-  });
-
-  console.log('Sample tips added successfully!');
-}
-
-// Check if tips collection is empty
-async function seedTips() {
-
-    // Get a reference to the "tips" collection
-    const tipsRef = collection(db, "tips");
-
-    // Retrieve all documents currently in the collection
-    const querySnapshot = await getDocs(tipsRef);
-
-    // If no documents exist, the collection is empty
-    if (querySnapshot.empty) {
-
-        console.log("Tips collection is empty. Seeding data...");
-
-        // Call function to insert default tip documents
-        addTipData();
-
-    } else {
-
-        // If documents already exist, do not reseed
-        console.log("Tips collection already contains data. Skipping seed.");
-    }
-}
-
-// Call the seeding function when the main.html page loads.
-seedTips();
-
-async function displayCardsDynamically() {
-  let cardTemplate = document.getElementById('tipCardTemplate');
-  const tipsCollectionRef = collection(db, 'tips');
-
-  try {
-    const querySnapshot = await getDocs(tipsCollectionRef);
-    querySnapshot.forEach((tipDoc) => {
-      // Clone the template
-      let newcard = cardTemplate.content.cloneNode(true);
-
-      // Get tip data once
-      const tip = tipDoc.data();
-
-      // Populate the card with tip data
-      newcard.querySelector('.card-title').textContent = tip.name;
-      newcard.querySelector('.card-text').textContent = tip.details;
-      newcard.querySelector('.card-category').textContent = tip.category;
-      newcard.querySelector('.card-image').src = `./images/${tip.code}.png`;
-
-      // Attach the document ID to the Read More link
-      newcard.querySelector('.read-more').href = `eachTip.html?docID=${tipDoc.id}`;
-
-      // Attach the new card to the container
-      document.getElementById('tips-go-here').appendChild(newcard);
-    });
-  } catch (error) {
-    console.error('Error getting documents: ', error);
+  const tipsRef = collection(db, "tips");
+  const tips = [
+    { code: "tip1", name: "Check Image Details", category: "Fake",
+      details: "Look for blurry edges, distorted objects, unusual fingers, or unnatural lighting." },
+    { code: "tip2", name: "Verify the Image Source", category: "Real",
+      details: "Check whether the image comes from a trusted website or reliable source." },
+    { code: "tip3", name: "Look for AI Signs", category: "Fake",
+      details: "AI-generated images may have unusual backgrounds, strange reflections, or inconsistent details." },
+    { code: "tip4", name: "Reverse Image Search", category: "Real",
+      details: "Use reverse image search to find the original image and check where it was published." },
+  ];
+  for (const tip of tips) {
+    await addDoc(tipsRef, { ...tip, views: 0, last_updated: serverTimestamp() });
   }
 }
 
-// Call the function to display cards when the page loads
-displayCardsDynamically();
+async function seedTips() {
+  const snapshot = await getDocs(collection(db, "tips"));
+  if (snapshot.empty) {
+    console.log("Tips collection is empty. Seeding data...");
+    await addTipData();
+  }
+}
+
+function setupHeart(card, tipID) {
+  const heart = card.querySelector(".fav-btn");
+  if (!heart) return; // template has no heart, skip
+
+  if (favourites.includes(tipID)) {
+    heart.classList.replace("bi-heart", "bi-heart-fill");
+  }
+
+  heart.addEventListener("click", function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    toggleFavourite(heart, tipID);
+  });
+}
+
+async function toggleFavourite(heart, tipID) {
+  const userRef = doc(db, "users", currentUser.uid);
+  try {
+    if (heart.classList.contains("bi-heart-fill")) {
+      await setDoc(userRef, { favourites: arrayRemove(tipID) }, { merge: true });
+      favourites = favourites.filter((id) => id !== tipID);
+      heart.classList.replace("bi-heart-fill", "bi-heart");
+    } else {
+      await setDoc(userRef, { favourites: arrayUnion(tipID) }, { merge: true });
+      favourites.push(tipID);
+      heart.classList.replace("bi-heart", "bi-heart-fill");
+    }
+  } catch (error) {
+    console.error("Error toggling favourite:", error);
+  }
+}
+
+async function displayCardsDynamically() {
+  const cardTemplate = document.getElementById("tipCardTemplate");
+  const container = document.getElementById("tips-go-here");
+
+  try {
+    const querySnapshot = await getDocs(collection(db, "tips"));
+    querySnapshot.forEach((tipDoc) => {
+      const tip = tipDoc.data();
+      const newcard = cardTemplate.content.cloneNode(true);
+
+      newcard.querySelector(".card-title").textContent = tip.name;
+      newcard.querySelector(".card-text").textContent = tip.details;
+      newcard.querySelector(".card-category").textContent = tip.category;
+      newcard.querySelector(".read-more").href = `eachTip.html?docID=${tipDoc.id}`;
+
+      const viewEl = newcard.querySelector(".view-count");
+      if (viewEl) viewEl.textContent = tip.views || 0;
+
+      setupHeart(newcard, tipDoc.id);
+      container.appendChild(newcard);
+    });
+  } catch (error) {
+    console.error("Error getting documents: ", error);
+  }
+}
+
+onAuthReady(async function (user) {
+  if (!user) {
+    location.href = "index.html";
+    return;
+  }
+  currentUser = user;
+  showName(user);
+
+  try {
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+    favourites = userDoc.data()?.favourites || [];
+  } catch (error) {
+    console.error("Could not load favourites:", error);
+    favourites = [];
+  }
+
+  try {
+    await seedTips();
+  } catch (error) {
+    console.error("Seeding failed:", error);
+  }
+
+  displayCardsDynamically();
+});

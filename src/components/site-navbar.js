@@ -15,8 +15,8 @@ class SiteNavbar extends HTMLElement {
             <nav class="navbar navbar-expand-lg navbar-light bg-info">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="/">
-                        <img src="/images/image.jpg" height="36">
-                        Project 1
+                        <img src="https://cdn-icons-png.flaticon.com/512/4078/4078029.png" height="36">
+                        Faux or No
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
   <head>
     <title>My BCIT Project</title>
     <meta name="comp1800 template" content="My 1800 App" />
@@ -24,19 +25,27 @@
     <!-- Main content goes here -->
     <main class="container mt-5">
       <h1 id="tipName">Loading...</h1>
+      <img id="tipImage" class="img-fluid rounded mt-3" src="" alt="Tip image">
+      <p class="mt-2">
+        <span class="badge rounded-pill text-bg-light border fw-normal">
+          <i class="bi bi-eye-fill me-1"></i><span id="viewCount">0</span> views
+        </span>
+      </p>
       <p id="tipCategory"></p>
       <p id="tipDetails"></p>
       <img id="tipImage" class="img-fluid rounded mt-3" src="" alt="Tip image">
       <a href="main.html" class="btn btn-light bg-info mt-2q">Back to Tips</a>
     </main>
+
     <!-- our own footer goes here -->
     <site-footer></site-footer>
 
     <!---------------------------------------------->
     <!-- Your own JavaScript scripts go here      -->
     <!---------------------------------------------->
-
     <script type="module" src="/src/app.js"></script>
-    <script type="module" src="/src/eachtip.js"></script>
+    <script type="module" src="/src/eachTip.js"></script>
+
   </body>
+
 </html>
