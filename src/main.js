@@ -81,6 +81,7 @@ async function displayCardsDynamically() {
       const tip = tipDoc.data();
       const newcard = cardTemplate.content.cloneNode(true);
 
+      newcard.querySelector('.card-image').src = `./images/${tip.code}.png`;
       newcard.querySelector(".card-title").textContent = tip.name;
       newcard.querySelector(".card-text").textContent = tip.details;
       newcard.querySelector(".card-category").textContent = tip.category;

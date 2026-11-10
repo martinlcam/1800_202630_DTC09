@@ -15,6 +15,7 @@ async function displayTipInfo() {
       document.getElementById('tipName').textContent = tip.name;
       document.getElementById('tipCategory').textContent = tip.category;
       document.getElementById('tipDetails').textContent = tip.details;
+      document.getElementById('tipImage').src = `./images/${tip.code}.png`;
 
       await updateDoc(tipRef, { views: increment(1) });
       document.getElementById('viewCount').textContent = (tip.views || 0) + 1;
