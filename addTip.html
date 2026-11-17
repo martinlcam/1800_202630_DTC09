@@ -1,67 +1,86 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
+  <head>
     <title>My BCIT Project</title>
-    <meta name="comp1800 template" content="My 1800 App">
+    <meta name="comp1800 template" content="My 1800 App" />
 
     <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- Web Components for shared navbar and footer layout -->
     <script type="module" src="/src/components/site-navbar.js"></script>
     <script type="module" src="/src/components/site-footer.js"></script>
-</head>
+  </head>
 
-<body>
+  <body>
     <!------------------------------>
     <!-- Your HTML Layout go here -->
     <!------------------------------>
 
     <!-- our own navbar goes here -->
     <site-navbar></site-navbar>
-    
-    <!-- Main content goes here -->
-     <main class="container py-4" style="max-width: 560px;">
-        <h1>Add a new Tip</h1>
 
-        <form id="addTipForm" novalidate>
-            <div class="mb-3">
-                <label for="TipTitleInput" class="form-label">Tip Title</label>
-                <input type="text" id="TipTitleInput" class="form-control" placeholder="e.g. check image detail" required />
-            </div>
-            <div class="mb-3">
-                <label for="infoInput" class="form-label">Info</label>
-                <input type="text" id="infoInput" class="form-control" placeholder="e.g. Enter a short description " required />
-            </div>
-            <div class="mb-3">
-                <label for="CategoryInput" class="form-label">Category</label>
-                <select id="CategoryInput" class="form-select">
-                  <option value=""disabled selected>Select a category</option>
-                    <option value="AI-generated images">AI-generated images</option>
-                    <option value="Fake or manipulated images">Fake or manipulated images</option>
-                    <option value="Real images">Real images</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="detailsInput" class="form-label">Details</label>
-                <textarea id="detailsInput" class="form-control" rows="3" placeholder="Explain this tip in detail"></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary w-100">Save Tip</button>
-        </form>
- </main>
+    <!-- Main content goes here -->
+    <main class="container py-4" style="max-width: 560px">
+      <h1>Add a new Tip</h1>
+
+      <form id="addTipForm" novalidate>
+        <div class="mb-3">
+          <label for="TipTitleInput" class="form-label">Tip Title</label>
+          <input
+            type="text"
+            id="TipTitleInput"
+            class="form-control"
+            placeholder="e.g. check image detail"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="infoInput" class="form-label">Info</label>
+          <input
+            type="text"
+            id="infoInput"
+            class="form-control"
+            placeholder="e.g. Enter a short description "
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="CategoryInput" class="form-label">Category</label>
+          <select id="CategoryInput" class="form-select">
+            <option value="" disabled selected>Select a category</option>
+            <option value="AI-generated images">AI-generated images</option>
+            <option value="Fake or manipulated images">Fake or manipulated images</option>
+            <option value="Real images">Real images</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="detailsInput" class="form-label">Details</label>
+          <textarea
+            id="detailsInput"
+            class="form-control"
+            rows="3"
+            placeholder="Explain this tip in detail"
+          ></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="imageInput" class="form-label">Photo (optional)</label>
+          <input type="file" id="imageInput" class="form-control" accept="image/*" />
+          <img id="imagePreview" class="img-fluid rounded mt-2 d-none" alt="Preview" />
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Save Tip</button>
+      </form>
+    </main>
 
     <!-- our own footer goes here -->
     <site-footer></site-footer>
-    
+
     <!---------------------------------------------->
     <!-- Your own JavaScript scripts go here      -->
     <!---------------------------------------------->
 
     <script type="module" src="/src/app.js"></script>
-        <script type="module" src="/src/addTip.js"></script>
-
-</body>
-
+    <script type="module" src="/src/addTip.js"></script>
+  </body>
 </html>

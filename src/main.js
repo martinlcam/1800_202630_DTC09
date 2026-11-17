@@ -80,8 +80,14 @@ async function displayCardsDynamically() {
     querySnapshot.forEach((tipDoc) => {
       const tip = tipDoc.data();
       const newcard = cardTemplate.content.cloneNode(true);
-
-      newcard.querySelector('.card-image').src = `./images/${tip.code}.png`;
+          const cardImage = newcard.querySelector('.card-image');
+          if (tip.image) {
+            cardImage.src = tip.image; // uploaded photo (base64 text)
+          } else if (tip.code) {
+            cardImage.src = `./images/${tip.code}.png`; // seeded hike
+          } else {
+            cardImage.src = './images/default.png'; // no photo → placeholder
+          }
       newcard.querySelector(".card-title").textContent = tip.name;
       newcard.querySelector(".card-text").textContent = tip.details;
       newcard.querySelector(".card-category").textContent = tip.category;

@@ -15,7 +15,13 @@ async function displayTipInfo() {
       document.getElementById('tipName').textContent = tip.name;
       document.getElementById('tipCategory').textContent = tip.category;
       document.getElementById('tipDetails').textContent = tip.details;
-      document.getElementById('tipImage').src = `./images/${tip.code}.png`;
+      if (tip.image) {
+        img.src = tip.image;
+      } else if (code) {
+        img.src = `./images/${code}.png`;
+      } else {
+        img.src = './images/default.png';
+      }
 
       await updateDoc(tipRef, { views: increment(1) });
       document.getElementById('viewCount').textContent = (tip.views || 0) + 1;
