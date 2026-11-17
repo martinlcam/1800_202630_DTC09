@@ -2,7 +2,7 @@ import { onAuthReady } from "/src/authentication.js";
 import { db } from "/src/firebaseConfig.js";
 import {
   collection, getDocs, addDoc, serverTimestamp,
-  doc, getDoc, setDoc, arrayUnion, arrayRemove
+  doc, getDoc, setDoc, arrayUnion, arrayRemove, deleteDoc
 } from "firebase/firestore";
 
 let currentUser = null;
@@ -71,6 +71,33 @@ async function toggleFavourite(heart, tipID) {
   }
 }
 
+function setupDelete(card, cardColumn, tipID, tip) {
+  const deleteBtn = card.querySelector(".delete-tip");
+  if (!deleteBtn) return;
+
+  if (!currentUser || tip.owner !== currentUser.uid) return;
+
+  deleteBtn.classList.remove("d-none");
+  deleteBtn.addEventListener("click", async function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (!confirm(`Delete "${tip.name}"?`)) return;
+
+    try {
+      await deleteDoc(doc(db, "tips", tipID));
+      cardColumn.remove();
+    } catch (error) {
+      console.error("Error deleting tip:", error);
+      alert("Could not delete this tip.");
+    }
+  });
+}
+
+const searchTerm = (new URL(window.location.href).searchParams.get('search') || '')
+  .trim()
+  .toLowerCase();
+let shown = 0;
+
 async function displayCardsDynamically() {
   const cardTemplate = document.getElementById("tipCardTemplate");
   const container = document.getElementById("tips-go-here");
@@ -79,19 +106,39 @@ async function displayCardsDynamically() {
     const querySnapshot = await getDocs(collection(db, "tips"));
     querySnapshot.forEach((tipDoc) => {
       const tip = tipDoc.data();
+      if (searchTerm) {
+        const haystack = `${tip.name} ${tip.details} ${tip.category}`.toLowerCase();
+        if (!haystack.includes(searchTerm)) return; // skip this tip
+      }
+      shown++;
       const newcard = cardTemplate.content.cloneNode(true);
 
       newcard.querySelector(".card-title").textContent = tip.name;
       newcard.querySelector(".card-text").textContent = tip.details;
       newcard.querySelector(".card-category").textContent = tip.category;
+      const cardImage = newcard.querySelector('.card-image');
+      if (tip.image) {
+        cardImage.src = tip.image; // uploaded photo (base64 text)
+      } else if (tip.code) {
+        cardImage.src = `./images/${tip.code}.jpg`; // seeded hike
+      } else {
+        cardImage.src = './images/default.jpg'; // no photo → placeholder
+      }
       newcard.querySelector(".read-more").href = `eachTip.html?docID=${tipDoc.id}`;
 
       const viewEl = newcard.querySelector(".view-count");
       if (viewEl) viewEl.textContent = tip.views || 0;
 
       setupHeart(newcard, tipDoc.id);
+
+      const cardColumn = newcard.firstElementChild;
+      setupDelete(newcard, cardColumn, tipDoc.id, tip);
+
       container.appendChild(newcard);
     });
+    if (searchTerm && shown === 0) {
+      container.innerHTML = `<p class="text-muted">No tips found for "${searchTerm.replace(/</g, '&lt;')}".</p>`;
+    }
   } catch (error) {
     console.error("Error getting documents: ", error);
   }

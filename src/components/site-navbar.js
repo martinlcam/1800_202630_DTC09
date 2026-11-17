@@ -7,6 +7,22 @@ class SiteNavbar extends HTMLElement {
         super();
         this.renderNavbar();
         this.renderAuthControls();        // This will add either login or logout button
+        this.setupSearch();
+    }
+    
+    setupSearch() {
+        const form = this.querySelector('#navSearch');
+        const input = form.querySelector('input');
+
+        input.value = new URLSearchParams(window.location.search).get('search') || '';
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const term = input.value.trim();
+            location.href = term
+            ? `/main.html?search=${encodeURIComponent(term)}`
+            : '/main.html';
+        });
     }
 
     renderNavbar() {
@@ -14,7 +30,7 @@ class SiteNavbar extends HTMLElement {
             <!-- Navbar: single source of truth -->
             <nav class="navbar navbar-expand-lg navbar-light bg-info">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="/">
+                    <a class="navbar-brand" href="/main.html">
                         <img src="https://cdn-icons-png.flaticon.com/512/4078/4078029.png" height="36">
                         Faux or No
                     </a>
@@ -25,7 +41,13 @@ class SiteNavbar extends HTMLElement {
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto">
                             <li class="nav-item">
-                                <a class="nav-link" href="/">Home</a>
+                                <a class="nav-link" href="/main.html">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/addTip.html">Add a Tip</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/profile.html">Profile</a>
                             </li>
                         </ul>
                         <div class="d-flex align-items-center gap-2 ms-lg-2" id="rightControls">

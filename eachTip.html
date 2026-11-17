@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="en">
-
   <head>
     <title>My BCIT Project</title>
     <meta name="comp1800 template" content="My 1800 App" />
@@ -25,16 +24,71 @@
     <!-- Main content goes here -->
     <main class="container mt-5">
       <h1 id="tipName">Loading...</h1>
-      <img id="tipImage" class="img-fluid rounded mt-3" src="" alt="Tip image">
+      <img
+        id="tipImage"
+        class="img-fluid rounded mt-3"
+        style="max-width: 400px"
+        src=""
+        alt="Tip image"
+      />
       <p class="mt-2">
         <span class="badge rounded-pill text-bg-light border fw-normal">
           <i class="bi bi-eye-fill me-1"></i><span id="viewCount">0</span> views
         </span>
       </p>
-      <p id="tipCategory"></p>
+
+      <h2 id="tipCategory"></h2>
       <p id="tipDetails"></p>
-      <img id="tipImage" class="img-fluid rounded mt-3" src="" alt="Tip image">
-      <a href="main.html" class="btn btn-light bg-info mt-2q">Back to Tips</a>
+
+      <section class="container mt-4">
+        <h2>Write a review</h2>
+        <form id="reviewForm" novalidate>
+          <div class="mb-3">
+            <label for="reviewTitle" class="form-label">Title</label>
+            <input
+              type="text"
+              id="reviewTitle"
+              class="form-control"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="reviewRating" class="form-label">Rating</label>
+            <select id="reviewRating" class="form-select">
+              <option value="5">5 – Loved it</option>
+              <option value="4">4</option>
+              <option value="3">3</option>
+              <option value="2">2</option>
+              <option value="1">1 – Never again</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="reviewText" class="form-label">Review</label>
+            <textarea id="reviewText" class="form-control" rows="3" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-info">Submit review</button>
+        </form>
+      </section>
+
+      <section class="container mt-4 card shadow-sm bg-light">
+        <h2>Latest Reviews</h2>
+        <div id="reviews-go-here"></div>
+      </section>
+
+      <template id="reviewTemplate">
+        <div class="card mb-2">
+          <div class="card-body">
+            <h5 class="card-title review-title"></h5>
+            <h6 class="card-subtitle mb-2 text-muted review-meta"></h6>
+            <p class="card-text review-text"></p>
+          </div>
+          <p class="card-text review-text"></p>
+<button type="button" class="btn btn-sm btn-outline-danger delete-btn d-none">
+    <i class="bi bi-trash"></i> Delete
+</button>
+        </div>
+      </template>
+      <a href="main.html" class="btn btn-light bg-info mt-2">Back to Tips</a>
     </main>
 
     <!-- our own footer goes here -->
@@ -45,7 +99,5 @@
     <!---------------------------------------------->
     <script type="module" src="/src/app.js"></script>
     <script type="module" src="/src/eachTip.js"></script>
-
   </body>
-
 </html>
