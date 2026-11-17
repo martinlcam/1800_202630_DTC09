@@ -36,6 +36,13 @@ async function displayTipInfo() {
       document.getElementById('tipName').textContent = tip.name;
       document.getElementById('tipCategory').textContent = tip.category;
       document.getElementById('tipDetails').textContent = tip.details;
+      if (tip.image) {
+        img.src = tip.image;
+      } else if (code) {
+        img.src = `./images/${code}.png`;
+      } else {
+        img.src = './images/default.png';
+      }
 
       // Tip image: use the stored image, else fall back to the code, else a default
       const img = document.getElementById('tipImage');
