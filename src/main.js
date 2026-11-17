@@ -17,13 +17,13 @@ function showName(user) {
 async function addTipData() {
   const tipsRef = collection(db, "tips");
   const tips = [
-    { code: "tip1", name: "Check Image Details", category: "Fake",
+    { code: "tip1", name: "Check Image Details", category: "",
       details: "Look for blurry edges, distorted objects, unusual fingers, or unnatural lighting." },
-    { code: "tip2", name: "Verify the Image Source", category: "Real",
+    { code: "tip2", name: "Verify the Image Source", category: "",
       details: "Check whether the image comes from a trusted website or reliable source." },
-    { code: "tip3", name: "Look for AI Signs", category: "Fake",
-      details: "AI-generated images may have unusual backgrounds, strange reflections, or inconsistent details." },
-    { code: "tip4", name: "Reverse Image Search", category: "Real",
+    { code: "tip3", name: "Caught in an image scam?", category: "",
+      details: "Save evidence, Check images, protect yourself, Stop payments, Report it, Spread awareness." },
+    { code: "tip4", name: "Reverse Image Search", category: "",
       details: "Use reverse image search to find the original image and check where it was published." },
   ];
   for (const tip of tips) {
@@ -165,5 +165,6 @@ onAuthReady(async function (user) {
     console.error("Seeding failed:", error);
   }
 
+  
   displayCardsDynamically();
 });
