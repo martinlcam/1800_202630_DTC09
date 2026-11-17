@@ -44,20 +44,21 @@
                 <a href="#" id="toSignup">Sign up</a>
             </small>
         </div>
-
+        
         <!-- Signup -->
         <div id="signupView" class="d-none">
             <h3 class="mb-3 text-center">Sign Up</h3>
             <form id="signupForm" novalidate>
                 <div class="mb-3">
                     <input type="text" id="signupName" class="form-control" placeholder="First and Last Name"
-                        aria-label="Full name" required />
+                    aria-label="Full name" required />
                 </div>
                 <div class="mb-3">
                     <input type="email" id="signupEmail" class="form-control" placeholder="Email" required />
                 </div>
                 <div class="mb-3">
                     <input type="password" id="signupPassword" class="form-control" placeholder="Password" required />
+                    <label for="user-password" style="margin-left: 12px; font-size: smaller; color: grey;">Password must be 6 characters minimum</label>
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Create Account</button>
             </form>
