@@ -16,13 +16,13 @@ function showName(name) {
 async function addTipData() {
   const tipsRef = collection(db, "tips");
   const tips = [
-    { code: "tip1", name: "Check Image Details", category: "",
+    { code: "tip1", name: "Check Image Details", category: "Image",
       details: "Look for blurry edges, distorted objects, unusual fingers, or unnatural lighting." },
-    { code: "tip2", name: "Verify the Image Source", category: "",
+    { code: "tip2", name: "Verify the Image Source", category: "Image",
       details: "Check whether the image comes from a trusted website or reliable source." },
-    { code: "tip3", name: "Caught in an image scam?", category: "",
+    { code: "tip3", name: "Caught in an image scam?", category: "Image",
       details: "Save evidence, Check images, protect yourself, Stop payments, Report it, Spread awareness." },
-    { code: "tip4", name: "Reverse Image Search", category: "",
+    { code: "tip4", name: "Reverse Image Search", category: "Image",
       details: "Use reverse image search to find the original image and check where it was published." },
   ];
   for (const tip of tips) {
