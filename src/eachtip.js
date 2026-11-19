@@ -10,6 +10,9 @@ import {
   where,
   orderBy,
   limit,
+  setDoc,
+  arrayUnion,
+  arrayRemove,
 } from 'firebase/firestore';
 
 let currentUser = null;
@@ -19,12 +22,48 @@ onAuthReady(function (user) {
     location.href = 'index.html';
   } else {
     currentUser = user;
+    setupFavButton(user);
   }
 });
 
 // Declare variable: the tip ID from the URL (eachTip.html?docID=abc123)
 const params = new URL(window.location.href).searchParams;
 const tipId = params.get('docID');
+
+async function setupFavButton(user) {
+  const heart = document.getElementById('fav-Btn');
+  if (!heart || !tipId) return;
+
+  const userRef = doc(db, 'users', user.uid);
+
+  try {
+    const snap = await getDoc(userRef);
+    const favourites = snap.data()?.favourites || [];
+    if (favourites.includes(tipId)) {
+      heart.classList.replace('bi-heart', 'bi-heart-fill');
+    }
+  } catch (error) {
+    console.error('Could not load favourites:', error);
+  }
+
+  heart.addEventListener('click', async function () {
+    const isFav = heart.classList.contains('bi-heart-fill');
+    try {
+      await setDoc(
+        userRef,
+        { favourites: isFav ? arrayRemove(tipId) : arrayUnion(tipId) },
+        { merge: true }
+      );
+      if (isFav) {
+        heart.classList.replace('bi-heart-fill', 'bi-heart');
+      } else {
+        heart.classList.replace('bi-heart', 'bi-heart-fill');
+      }
+    } catch (error) {
+      console.error('Error toggling favourite', error);
+    }
+  });
+}
 
 // Fetch the tip and display its name and image
 async function displayTipInfo() {

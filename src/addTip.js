@@ -40,6 +40,7 @@ function resizeImage(file, maxSize = 600) {
       const newTip = {
         name: document.getElementById('tipNameInput').value,
         category: document.getElementById('categoryInput').value,
+        type: document.getElementById('typeInput').value,
         details: document.getElementById('detailsInput').value,
         owner: currentUser.uid, // WHO added it
         ownerName: currentUser.displayName || currentUser.email,
