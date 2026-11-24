@@ -13,31 +13,6 @@ function showName(name) {
   if (el) el.textContent = name + "!";
 }
 
-async function addTipData() {
-  const tipsRef = collection(db, "tips");
-  const tips = [
-    { code: "tip1", name: "Check Image Details", category: "Image",
-      details: "Look for blurry edges, distorted objects, unusual fingers, or unnatural lighting." },
-    { code: "tip2", name: "Verify the Image Source", category: "Image",
-      details: "Check whether the image comes from a trusted website or reliable source." },
-    { code: "tip3", name: "Caught in an image scam?", category: "Image",
-      details: "Save evidence, Check images, protect yourself, Stop payments, Report it, Spread awareness." },
-    { code: "tip4", name: "Reverse Image Search", category: "Image",
-      details: "Use reverse image search to find the original image and check where it was published." },
-  ];
-  for (const tip of tips) {
-    await addDoc(tipsRef, { ...tip, views: 0, last_updated: serverTimestamp() });
-  }
-}
-
-async function seedTips() {
-  const snapshot = await getDocs(collection(db, "tips"));
-  if (snapshot.empty) {
-    console.log("Tips collection is empty. Seeding data...");
-    await addTipData();
-  }
-}
-
 function setupHeart(card, tipID) {
   const heart = card.querySelector(".fav-btn");
   if (!heart) return; // template has no heart, skip
@@ -103,10 +78,15 @@ async function displayCardsDynamically() {
 
   try {
     const querySnapshot = await getDocs(collection(db, "tips"));
+
+    // text that shows up if there is an empty collection, otherwise it's just a blank page
+    if (querySnapshot.empty) {
+      container.innerHTML = `<p class="text-muted">No tips yet. Add the first one!</p>`;
+    }
     querySnapshot.forEach((tipDoc) => {
       const tip = tipDoc.data();
       if (searchTerm) {
-        const haystack = `${tip.name} ${tip.details} ${tip.category}`.toLowerCase();
+        const haystack = `${tip.name || ""} ${tip.details || ""} ${tip.category|| ""} ${tip.type || ""}`.toLowerCase();
         if (!haystack.includes(searchTerm)) return; // skip this tip
       }
       shown++;
@@ -163,11 +143,6 @@ onAuthReady(async function (user) {
 
   showName(displayName);
 
-  try {
-    await seedTips();
-  } catch (error) {
-    console.error("Seeding failed:", error);
-  }
 
   
   displayCardsDynamically();
