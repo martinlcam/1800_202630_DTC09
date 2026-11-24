@@ -11,6 +11,7 @@ import {
   arrayUnion,
   arrayRemove,
 } from 'firebase/firestore';
+import { updateProfile } from 'firebase/auth';
 
 // The fields we store in Firestore (email comes from Auth, not from here)
 const fields = ['name', 'country', 'school', 'bio'];
@@ -135,6 +136,7 @@ async function saveProfile(event) {
 
   try {
     await updateDoc(doc(db, 'users', currentUser.uid), updates);
+    await updateProfile(currentUser, { displayName: updates.name });
 
     // Lock the form again, refresh the header, show a confirmation
     fields.forEach((field) => (document.getElementById(field + 'Input').disabled = true));
