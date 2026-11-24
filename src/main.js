@@ -16,6 +16,34 @@ function showName(name) {
 async function addTipData() {
   const tipsRef = collection(db, "tips");
   const tips = [
+<<<<<<< HEAD
+    {
+      code: 'tip1',
+      name: 'Check Image Details',
+      category: '',
+      details: 'Look for blurry edges, distorted objects, unusual fingers, or unnatural lighting.',
+    },
+    {
+      code: 'tip2',
+      name: 'Verify the Image Source',
+      category: '',
+      details: 'Check whether the image comes from a trusted website or reliable source.',
+    },
+    {
+      code: 'tip4',
+      name: 'Reverse Image Search',
+      category: '',
+      details:
+        'Use reverse image search to find the original image and check where it was published.',
+    },
+    {
+      code: 'tip3',
+      name: 'Caught in an image scam?',
+      category: '',
+      details:
+        'Save evidence, Check images, protect yourself, Stop payments, Report it, Spread awareness.',
+    },
+=======
     { code: "tip1", name: "Check Image Details", category: "Image",
       details: "Look for blurry edges, distorted objects, unusual fingers, or unnatural lighting." },
     { code: "tip2", name: "Verify the Image Source", category: "Image",
@@ -24,6 +52,7 @@ async function addTipData() {
       details: "Save evidence, Check images, protect yourself, Stop payments, Report it, Spread awareness." },
     { code: "tip4", name: "Reverse Image Search", category: "Image",
       details: "Use reverse image search to find the original image and check where it was published." },
+>>>>>>> dba0e313a15bd859c8db59819bdfeff7949c31aa
   ];
   for (const tip of tips) {
     await addDoc(tipsRef, { ...tip, views: 0, last_updated: serverTimestamp() });
