@@ -126,8 +126,8 @@ async function displayReviews() {
       const review = doc.data();
       const card = template.content.cloneNode(true);
 
-      card.querySelector('.review-title').textContent =
-        `${review.title} ${'★'.repeat(review.rating)}`;
+      card.querySelector('.review-title').innerHTML =
+        `${review.title} <span style="color: gold;"> ${'★'.repeat(review.rating)}</span>`;
       const date = review.timestamp ? review.timestamp.toDate().toLocaleDateString() : 'just now';
       card.querySelector('.review-meta').textContent = `${review.userName} · ${date}`;
       card.querySelector('.review-text').textContent = review.text;
