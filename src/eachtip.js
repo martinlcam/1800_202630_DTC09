@@ -8,8 +8,6 @@ import {
   serverTimestamp,
   query,
   where,
-  orderBy,
-  limit,
   setDoc,
   arrayUnion,
   arrayRemove,
@@ -134,6 +132,7 @@ async function displayReviews() {
       // Only the author sees the Delete button
       const deleteBtn = card.querySelector('.delete-btn');
       if (review.userID === currentUser.uid) {
+        
         deleteBtn.classList.remove('d-none');
         deleteBtn.addEventListener('click', async function () {
           if (confirm('Delete this review?')) {
