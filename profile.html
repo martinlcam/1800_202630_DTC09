@@ -88,19 +88,25 @@
 
     <template id="tipCardTemplate">
         <div class="col-md-6 col-lg-3">
-            <div class="card">
+            <div class="card position-relative">
                 <img class="card-img-top card-image" src="..." alt="Tip Image">
-                <i class="bi bi-heart text-danger fs-4 fav-btn position-absolute top-0 end-0 m-2" role="button" title="Favourite"></i>
+                <i class="bi bi-heart text-danger fav-btn position-absolute top-0 end-0 m-2 d-flex align-items-center justify-content-center rounded-circle" 
+                role="button" title="Favourite"
+                style="width: 40px; height: 40px; font-size: 1.25rem; background-color: #FFF;"></i>
                 <div class="card h-100 p-3">
                     <h5 class="card-title"></h5>
                     <p class="card-text"></p>
-                    <p class="card-category"></p>
-                    <a class="btn btn-light bg-info read-more" href="#">Read More</a>
+                    <div class="card-badges d-flex flex-wrap gap-1 mb-2"></div>
+                    <div class="d-flex gap-2">
+                        <a class="btn btn-light bg-info read-more" href="#">Read More</a>
+                        <button type="button" class="btn btn-outline-danger delete-tip d-none">
+                            <i class="bi bi-trash"></i> Delete
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </template>
-
     <!-- our own footer goes here -->
     <site-footer></site-footer>
     

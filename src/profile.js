@@ -153,6 +153,23 @@ async function saveProfile(event) {
 // ---- (2) Connect it to the form ----
 document.getElementById('profileForm').addEventListener('submit', saveProfile);
 
+function truncate(text, max =100) {
+  if (!text) return "";
+  return text.length <= max ? text : text.slice(0, max).trimEnd() + '...';
+}
+
+function renderBadges(container, items) {
+  container.innerHTML = '';
+  items
+    .filter((item) => item.text)
+    .forEach((item) => {
+      const badge = document.createElement('span');
+      badge.className = `badge rounded-pill ${item.className}`;
+      badge.textContent = item.text;
+      container.appendChild(badge);
+    });
+}
+
 // ---- Favourite tips ----
 async function displayFavourites() {
   const container = document.getElementById('tips-go-here');
@@ -174,8 +191,11 @@ async function displayFavourites() {
     const tip = doc.data();
 
     newcard.querySelector('.card-title').textContent = tip.name;
-    newcard.querySelector('.card-text').textContent = tip.details || `Located in ${tip.city}.`;
-    newcard.querySelector('.card-category').textContent = tip.category;
+    newcard.querySelector('.card-text').textContent = truncate(tip.details || '', 100);
+    renderBadges(newcard.querySelector('.card-badges'), [
+      { text: tip.category, className: 'text-bg-info' },
+      { text: tip.type, className: 'text-bg-secondary' },
+    ]);
     const cardImg = newcard.querySelector('.card-image');
     if (tip.image) {
       cardImg.src = tip.image;

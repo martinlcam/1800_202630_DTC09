@@ -65,6 +65,16 @@ async function setupFavButton(user) {
   });
 }
 
+function renderBadges(container, items) {
+  container.innerHTML = "";
+  items.filter((item) => item.text).forEach((item) => {
+    const badge = document.createElement("span");
+    badge.className = `badge rounded-pill ${item.className}`;
+    badge.textContent = item.text;
+    container.appendChild(badge);
+  });
+}
+
 // Fetch the tip and display its name and image
 async function displayTipInfo() {
   try {
@@ -75,7 +85,10 @@ async function displayTipInfo() {
       const tip = tipSnap.data();
 
       document.getElementById('tipName').textContent = tip.name;
-      document.getElementById('tipCategory').textContent = tip.category;
+      renderBadges(document.getElementById('tipBadges'), [
+        { text: tip.category, className: 'text-bg-info' },
+        { text: tip.type, className: 'text-bg-secondary' },
+      ]);
       document.getElementById('tipDetails').textContent = tip.details;
 
       const img = document.getElementById('tipImage');

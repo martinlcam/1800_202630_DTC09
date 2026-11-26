@@ -1,7 +1,7 @@
 import { onAuthReady } from "/src/authentication.js";
 import { db } from "/src/firebaseConfig.js";
 import {
-  collection, getDocs, addDoc, serverTimestamp,
+  collection, getDocs,
   doc, getDoc, setDoc, arrayUnion, arrayRemove, deleteDoc
 } from "firebase/firestore";
 
@@ -72,6 +72,70 @@ const searchTerm = (new URL(window.location.href).searchParams.get('search') || 
   .toLowerCase();
 let shown = 0;
 
+function renderBadges(container, items) {
+  container.innerHTML = "";
+  items.filter((item) => item.text).forEach((item) => {
+    const badge = document.createElement("span");
+    badge.className = `badge rounded-pill ${item.className}`;
+    badge.textContent = item.text;
+    container.appendChild(badge);
+  });
+}
+
+function truncate(text, max = 100) {
+  if (!text) return "";
+  return text.length <= max ? text : text.slice(0, max).trimEnd() + "...";
+}
+
+const activeFilters = new Set();
+const allTags = new Set();
+
+function applyFilters() {
+  let visible = 0;
+  document.querySelectorAll("#tips-go-here > [data-tags]").forEach((col) => {
+    const tags = JSON.parse(col.dataset.tags);
+    const show = activeFilters.size === 0 || tags.some((t) => activeFilters.has(t));
+    col.classList.toggle("d-none", !show);
+    if (show) visible++;
+  });
+  document.getElementById("no-filter-results").classList.toggle("d-none", visible > 0);
+  document.querySelectorAll("#filter-buttons button").forEach((btn) => {
+    const isAll = btn.dataset.tag === "";
+    const on = isAll ? activeFilters.size === 0 : activeFilters.has(btn.dataset.tag);
+    btn.classList.toggle("btn-secondary", on);
+    btn.classList.toggle("btn-outline-secondary", !on);
+  });
+}
+
+function buildFilterButtons() {
+  const bar = document.getElementById("filter-buttons");
+  bar.innerHTML = "";
+  if (allTags.size === 0) return;
+
+  const makeButton = (label, tag) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "btn btn-sm btn-outline-secondary";
+    btn.textContent = label;
+    btn.dataset.tag = tag;
+    btn.addEventListener("click", () => {
+      if (tag === "") {
+        activeFilters.clear();
+      } else if (activeFilters.has(tag)) {
+        activeFilters.delete(tag);
+      } else {
+        activeFilters.add(tag);
+      }
+      applyFilters();
+    });
+    bar.appendChild(btn);
+  };
+  
+  makeButton("All", "");
+  [...allTags].sort().forEach((tag) => makeButton(tag, tag));
+  applyFilters();
+}
+
 async function displayCardsDynamically() {
   const cardTemplate = document.getElementById("tipCardTemplate");
   const container = document.getElementById("tips-go-here");
@@ -82,6 +146,7 @@ async function displayCardsDynamically() {
     // text that shows up if there is an empty collection, otherwise it's just a blank page
     if (querySnapshot.empty) {
       container.innerHTML = `<p class="text-muted">No tips yet. Add the first one!</p>`;
+      return;
     }
     querySnapshot.forEach((tipDoc) => {
       const tip = tipDoc.data();
@@ -92,8 +157,11 @@ async function displayCardsDynamically() {
       shown++;
       const newcard = cardTemplate.content.cloneNode(true);
       newcard.querySelector(".card-title").textContent = tip.name;
-      newcard.querySelector(".card-text").textContent = tip.details;
-      newcard.querySelector(".card-category").textContent = tip.category;
+      newcard.querySelector('.card-text').textContent = truncate(tip.details || '', 100);
+      renderBadges(newcard.querySelector(".card-badges"), [
+        { text: tip.category, className: "text-bg-info" },
+        { text: tip.type, className: "text-bg-secondary" },
+      ]);
       const cardImage = newcard.querySelector('.card-image');
       if (tip.image) {
         cardImage.src = tip.image; // uploaded photo (base64 text)
@@ -110,10 +178,15 @@ async function displayCardsDynamically() {
       setupHeart(newcard, tipDoc.id);
 
       const cardColumn = newcard.firstElementChild;
+      const tags = [tip.category, tip.type].filter(Boolean);
+      cardColumn.dataset.tags = JSON.stringify(tags);
+      tags.forEach((t) => allTags.add(t));
+
       setupDelete(newcard, cardColumn, tipDoc.id, tip);
 
       container.appendChild(newcard);
     });
+    buildFilterButtons();
     if (searchTerm && shown === 0) {
       container.innerHTML = `<p class="text-muted">No tips found for "${searchTerm.replace(/</g, '&lt;')}".</p>`;
     }

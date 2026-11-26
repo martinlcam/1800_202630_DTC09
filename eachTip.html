@@ -17,13 +17,15 @@
     <!------------------------------>
     <!-- Your HTML Layout go here -->
     <!------------------------------>
-    
+
     <!-- our own navbar goes here -->
     <site-navbar></site-navbar>
-    
+
     <!-- Main content goes here -->
     <main class="container mt-5">
-      <a href="main.html" class="btn btn-light bg-info mt-2" style="margin-bottom: 60px;">Back to Tips</a>
+      <a href="main.html" class="btn btn-light bg-info mt-2" style="margin-bottom: 60px"
+        >Back to Tips</a
+      >
       <h1 id="tipName">Loading...</h1>
       <img
         id="tipImage"
@@ -33,9 +35,13 @@
         alt="Tip image"
       />
       <div class="mt-2">
-        <i id="fav-Btn" class="bi bi-heart text-danger d-inline-flex align-items-center justify-content-center rounded-circle"
-        role="button" title="Favourite"
-        style="width: 40px; height: 40px; font-size: 1.25rem; background-color: #FFF;"></i>
+        <i
+          id="fav-Btn"
+          class="bi bi-heart text-danger d-inline-flex align-items-center justify-content-center rounded-circle"
+          role="button"
+          title="Favourite"
+          style="width: 40px; height: 40px; font-size: 1.25rem; background-color: #fff"
+        ></i>
       </div>
       <p class="mt-2">
         <span class="badge rounded-pill text-bg-light border fw-normal">
@@ -43,7 +49,8 @@
         </span>
       </p>
 
-      <h2 id="tipCategory"></h2>
+      <!-- holds the badges -->
+      <div id="tipBadges" class="d-flex flex-wrap gap-2 mb-2"></div>
       <p id="tipDetails"></p>
 
       <section class="container mt-4">
@@ -51,12 +58,7 @@
         <form id="reviewForm" novalidate>
           <div class="mb-3">
             <label for="reviewTitle" class="form-label">Title</label>
-            <input
-              type="text"
-              id="reviewTitle"
-              class="form-control"
-              required
-            />
+            <input type="text" id="reviewTitle" class="form-control" required />
           </div>
           <div class="mb-3">
             <label for="reviewRating" class="form-label">Rating</label>
@@ -72,7 +74,9 @@
             <label for="reviewText" class="form-label">Review</label>
             <textarea id="reviewText" class="form-control" rows="3" required></textarea>
           </div>
-          <button type="submit" class="btn btn-info" style="margin-bottom: 45px;">Submit review</button>
+          <button type="submit" class="btn btn-info" style="margin-bottom: 45px">
+            Submit review
+          </button>
         </form>
       </section>
 
@@ -89,9 +93,9 @@
             <p class="card-text review-text"></p>
           </div>
           <p class="card-text review-text"></p>
-<button type="button" class="btn btn-sm btn-outline-danger delete-btn d-none">
-    <i class="bi bi-trash"></i> Delete
-</button>
+          <button type="button" class="btn btn-sm btn-outline-danger delete-btn d-none">
+            <i class="bi bi-trash"></i> Delete
+          </button>
         </div>
       </template>
     </main>
