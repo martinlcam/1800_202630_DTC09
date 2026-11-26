@@ -15,18 +15,21 @@ function addTipData() {
     code: 'tip1',
     name: 'Check Image Details',
     category: 'Image',
+    type: 'AI',
     details: 'Look for blurry edges, distorted objects, unusual fingers, or unnatural lighting.',
   });
   addDoc(tipsRef, {
     code: 'tip2',
     name: 'Verify the Image Source',
     category: 'Image',
+    type: 'AI',
     details: 'Check whether the image comes from a trusted website or reliable source.',
   });
   addDoc(tipsRef, {
     code: 'tip3',
     name: 'Caught in an image scam?',
     category: 'Image',
+    type: 'AI',
     details:
       'Save evidence, Check images, protect yourself, Stop payments, Report it, Spread awareness.',
   });
@@ -34,6 +37,7 @@ function addTipData() {
     code: 'tip4',
     name: 'Reverse Image Search',
     category: 'Image',
+    type: 'AI',
     details:
       'Use reverse image search to find the original image and check where it was published.',
   });
@@ -41,13 +45,15 @@ function addTipData() {
     code: 'tip5',
     name: 'Protect your photos',
     category: 'Image',
+    type: 'Phishing/Scams',
     details:
-      'Be careful when sharing personal photos onlin. Scammers may copy, edit, or misuse your images without permission. Review your privacy settings and limit who can access your photos.',
+      'Be careful when sharing personal photos online. Scammers may copy, edit, or misuse your images without permission. Review your privacy settings and limit who can access your photos.',
   });
   addDoc(tipsRef, {
     code: 'tip6',
     name: 'Recognize Fake profiles',
     category: 'Image',
+    type: 'Social Media',
     details:
       "Be cautious of accounts with stolen photos, very few posts, suspicious usernames, or inconsistent information. Verify the person's identity before trusting them.",
   });
@@ -55,6 +61,7 @@ function addTipData() {
     code: 'tip7',
     name: 'Report Suspicious images',
     category: 'Image',
+    type: 'Social Media',
     details:
       'If you discover a suspicious image, fake profile, or image scam, report iyt to the platform. Save evidence before blocking the account. Report can help protect other people too',
   });
@@ -62,7 +69,8 @@ function addTipData() {
     code: 'tip8',
     name: 'Do not Trust Images Immediately',
     category: 'Image',
-    details: 'Pause and verify before beleiving, sharing, or acting on an image.',
+    type: 'Phishing/Scams',
+    details: 'Pause and verify before believing, sharing, or acting on an image.',
   });
 }
 
