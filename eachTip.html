@@ -27,6 +27,7 @@
         >Back to Tips</a
       >
       <h1 id="tipName">Loading...</h1>
+      <p id="postedBy" class="text-muted mb-1 d-none"></p>
       <div class="d-flex align-items-center gap-2 mt-1">
   <span id="avgStars" class="d-inline-flex gap-1"></span>
   <span id="avgText" class="text-muted small"></span>
@@ -75,15 +76,39 @@
 </section>
 
 <template id="commentTemplate">
-  <div class="card mb-2" style="background-color: aliceblue;">
-    <div class="card-body">
-      <h5 class="card-title comment-title d-none"></h5>
-      <h6 class="card-subtitle mb-2 text-muted comment-meta"></h6>
-      <p class="card-text comment-text"></p>
-      <button type="button" class="btn btn-sm btn-outline-danger delete-btn d-none">
-        <i class="bi bi-trash"></i> Delete
-      </button>
+  <div class="comment-node mb-2">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title comment-title d-none"></h5>
+        <h6 class="card-subtitle mb-2 text-muted comment-meta"></h6>
+        <p class="card-text comment-text"></p>
+
+       <div class="d-flex flex-wrap gap-2 align-items-center">
+        <button type="button" class="btn btn-sm btn-outline-succes like-btn">
+          <i class="bi bi-hand-thumbs-up"></i> <span class="like-count">0</span>
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-danger dislike-btn">
+          <i class="bi bi-hand-thumbs-up"></i> <span class="dislike-count">0</span>
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-secondary reply-btn">
+          <i class="bi bi-reply"></i> Reply
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-danger delete-btn d-none">
+          <i class="bi bi-trash"></i> Delete
+        </button>
+       </div>
+
+        <form class="reply-form d-none mt-2" novalidate>
+          <textarea class="form-control form-control-sm mb-2 reply-input" rows="2"
+                    placeholder="Write a reply..."></textarea>
+          <button type="submit" class="btn btn-sm btn-info">Post reply</button>
+          <button type="button" class="btn btn-sm btn-secondary reply-cancel">Cancel</button>
+        </form>
+      </div>
     </div>
+
+    <!-- Child replies go here, indented -->
+    <div class="replies d-none mt-2 ms-3 ps-3 border-start"></div>
   </div>
 </template>
     </main>

@@ -180,6 +180,11 @@ async function displayTipInfo() {
       const tip = tipSnap.data();
 
       document.getElementById('tipName').textContent = tip.name;
+      const postedBy = document.getElementById('postedBy');
+      if (tip.ownerName) {
+        postedBy.textContent = `Posted by ${tip.ownerName}`;
+        postedBy.classList.remove('d-none');
+      }
       renderBadges(document.getElementById('tipBadges'), [
         { text: tip.category, className: 'text-bg-info' },
         { text: tip.type, className: 'text-bg-secondary' },
@@ -210,6 +215,91 @@ async function displayTipInfo() {
 displayTipInfo();
 
 // ---- CHANGED: reviews are now comments (same "reviews" collection) ----
+// Milliseconds for sorting; a just-posted item has no server timestamp yet
+function timeValue(data) {
+  return data.timestamp ? data.timestamp.toMillis() : Date.now();
+}
+
+const MAX_INDENT = 8; // after this many levels, stop indenting so it doesn't squeeze off-screen
+
+// Vote tallies for the current tip: { commentId: { likes, dislikes, mine } }
+// mine = 1 (liked), -1 (disliked), 0 (no vote)
+let voteState = {};
+
+async function loadVotes() {
+  voteState = {};
+  try {
+    const snap = await getDocs(query(collection(db, 'votes'), where('tipId', '==', tipId)));
+    snap.forEach((d) => {
+      const v = d.data();
+      if (!voteState[v.commentID]) voteState[v.commentID] = { likes: 0, dislikes: 0, mine: 0 };
+      const s = voteState[v.commentID];
+      if (v.value === 1) s.likes++;
+      if (v.value === -1) s.dislikes++;
+      if (currentUser && v.userID === currentUser.uid) s.mine = v.value;
+    });
+  } catch (error) {
+    console.error('Could not load votes:', error);
+  }
+}
+
+// Wire up the like/dislike buttons on one comment or reply
+function setupVotes(node, commentId) {
+  if (!voteState[commentId]) voteState[commentId] = { likes: 0, dislikes: 0, mine: 0 };
+  const s = voteState[commentId];
+
+  const likeBtn = node.querySelector('.like-btn');
+  const dislikeBtn = node.querySelector('.dislike-btn');
+
+  // Repaint only this node, so open reply forms are not lost
+  function paint() {
+    likeBtn.querySelector('.like-count').textContent = s.likes;
+    dislikeBtn.querySelector('.dislike-count').textContent = s.dislikes;
+
+    const liked = s.mine === 1;
+    const disliked = s.mine === -1;
+    likeBtn.classList.toggle('btn-success', liked);
+    likeBtn.classList.toggle('btn-outline-success', !liked);
+    likeBtn.querySelector('i').className = liked ? 'bi bi-hand-thumbs-up-fill' : 'bi bi-hand-thumbs-up';
+    dislikeBtn.classList.toggle('btn-danger', disliked);
+    dislikeBtn.classList.toggle('btn-outline-danger', !disliked);
+    dislikeBtn.querySelector('i').className = disliked ? 'bi bi-hand-thumbs-down-fill' : 'bi bi-hand-thumbs-down';
+  }
+
+  async function vote(value) {
+    if (!currentUser) return;
+    const ref = doc(db, 'votes', `${commentId}_${currentUser.uid}`);
+    const prev = s.mine;
+    try {
+      if (prev === value) {
+        await deleteDoc(ref); // clicking the same vote again removes it
+      } else {
+        await setDoc(ref, {
+          tipId: tipId,
+          commentID: commentId,
+          userID: currentUser.uid,
+          value: value,
+          timestamp: serverTimestamp(),
+        });
+      }
+      // Update the counts in memory only after the write succeeded
+      if (prev === 1) s.likes--;
+      if (prev === -1) s.dislikes--;
+      s.mine = prev === value ? 0 : value;
+      if (s.mine === 1) s.likes++;
+      if (s.mine === -1) s.dislikes++;
+      paint();
+    } catch (error) {
+      console.error('Error saving vote:', error);
+      alert('Could not save your vote.');
+    }
+  }
+
+  likeBtn.addEventListener('click', () => vote(1));
+  dislikeBtn.addEventListener('click', () => vote(-1));
+  paint();
+}
+
 async function displayComments() {
   const container = document.getElementById('comments-go-here');
   const template = document.getElementById('commentTemplate');
@@ -219,40 +309,92 @@ async function displayComments() {
 
   try {
     const querySnapshot = await getDocs(q);
+    await loadVotes();
 
-    if (querySnapshot.empty) {
+    // Top-level comments, plus every reply grouped under whatever it answers
+    const roots = [];
+    const childrenByParent = {};
+    querySnapshot.forEach((d) => {
+      const item = { id: d.id, ref: d.ref, data: d.data() };
+      const parent = item.data.parentID;
+      if (parent) {
+        if (!childrenByParent[parent]) childrenByParent[parent] = [];
+        childrenByParent[parent].push(item);
+      } else {
+        roots.push(item);
+      }
+    });
+
+    if (roots.length === 0) {
       container.innerHTML = "<p class='text-muted'>No comments yet. Be the first!</p>";
       return;
     }
 
-    querySnapshot.forEach((commentDoc) => {
-      const comment = commentDoc.data();
-      const card = template.content.cloneNode(true);
+    // Builds one comment or reply, then calls itself for each of its replies
+    function renderNode(item, depth) {
+      const { id, ref, data } = item;
+      const node = template.content.cloneNode(true).firstElementChild;
 
       // Older reviews had a title; show it if there is one
-      const titleEl = card.querySelector('.comment-title');
-      if (comment.title) {
-        titleEl.textContent = comment.title;
+      const titleEl = node.querySelector('.comment-title');
+      if (data.title) {
+        titleEl.textContent = data.title;
         titleEl.classList.remove('d-none');
       }
 
-      const date = comment.timestamp ? comment.timestamp.toDate().toLocaleDateString() : 'just now';
-      card.querySelector('.comment-meta').textContent = `${comment.userName} · ${date}`;
-      card.querySelector('.comment-text').textContent = comment.text;
+      const date = data.timestamp ? data.timestamp.toDate().toLocaleDateString() : 'just now';
+      node.querySelector('.comment-meta').textContent = `${data.userName} · ${date}`;
+      node.querySelector('.comment-text').textContent = data.text;
+      node.querySelector('.comment-text').textContent = data.text;
+      setupVotes(node, id); 
 
-      // Only the author sees the Delete button
-      const deleteBtn = card.querySelector('.delete-btn');
-      if (deleteBtn && currentUser && comment.userID === currentUser.uid) {
+      // Delete: author only
+      const deleteBtn = node.querySelector('.delete-btn');
+      if (currentUser && data.userID === currentUser.uid) {
         deleteBtn.classList.remove('d-none');
-        deleteBtn.addEventListener('click', async function () {
-          if (confirm('Delete this comment?')) {
-            await deleteDoc(commentDoc.ref);
+        deleteBtn.addEventListener('click', async () => {
+          if (confirm('Delete this?')) {
+            await deleteDoc(ref);
             displayComments();
           }
         });
       }
-      container.appendChild(card);
-    });
+
+      // Reply form
+      const replyBtn = node.querySelector('.reply-btn');
+      const replyForm = node.querySelector('.reply-form');
+      const replyInput = node.querySelector('.reply-input');
+      replyBtn.addEventListener('click', () => {
+        replyForm.classList.toggle('d-none');
+        if (!replyForm.classList.contains('d-none')) replyInput.focus();
+      });
+      node.querySelector('.reply-cancel').addEventListener('click', () => {
+        replyForm.reset();
+        replyForm.classList.add('d-none');
+      });
+      replyForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        submitReply(id, replyInput.value); // id of THIS comment or reply
+      });
+
+      // Children LAST, so the queries above only match this node's own buttons
+      const children = (childrenByParent[id] || []).sort(
+        (a, b) => timeValue(a.data) - timeValue(b.data) // oldest first
+      );
+      if (children.length > 0) {
+        const repliesBox = node.querySelector('.replies');
+        repliesBox.classList.remove('d-none');
+        if (depth >= MAX_INDENT) {
+          repliesBox.classList.remove('ms-3', 'ps-3', 'border-start');
+        }
+        children.forEach((child) => repliesBox.appendChild(renderNode(child, depth + 1)));
+      }
+
+      return node;
+    }
+
+    roots.sort((a, b) => timeValue(b.data) - timeValue(a.data)); // newest first
+    roots.forEach((root) => container.appendChild(renderNode(root, 1)));
   } catch (error) {
     console.error('Error loading comments:', error);
   }
@@ -282,6 +424,29 @@ async function submitComment(event) {
     displayComments();
   } catch (error) {
     alert(`Error saving comment:\n${error.code || ''}\n${error.message || error}`);
+  }
+}
+
+async function submitReply(parentId, rawText) {
+  if (!currentUser) {
+    alert('Still checking your login, try again.');
+    return;
+  }
+  const text = rawText.trim();
+  if (!text) return;
+
+  try {
+    await addDoc(collection(db, 'reviews'), {
+      tipDocID: tipId,
+      parentID: parentId, // the comment being replied to
+      userID: currentUser.uid,
+      userName: currentUser.displayName || currentUser.email,
+      text: text,
+      timestamp: serverTimestamp(),
+    });
+    displayComments();
+  } catch (error) {
+    alert(`Error saving reply:\n${error.code || ''}\n${error.message || error}`);
   }
 }
 
