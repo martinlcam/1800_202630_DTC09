@@ -32,9 +32,12 @@
     </div>
     
     <!-- Tips Cards populating -->
+  
         <div class="container-fluid bg-body text-dark p-5">
-        <a class="btn btn-info mb-3" href="addTip.html">➕ Add a Tip</a>
-        <h1>Useful Tips</h1>
+        <div class="d-flex align-items-center justify-content-between  mb-3">
+        <h1 class="mb-0">Useful Tips</h1>
+        <a class="btn btn-secondary mt-2" href="addTip.html">➕ Add a Tip</a>
+        </div>
         <div id="tips-go-here" class="row g-4"> 
         </div>
     </div>
@@ -51,7 +54,7 @@
                     <p class="card-text"></p>
                     <p class="card-category"></p>
                     <div class="d-flex gap-2">
-                        <a class="btn btn-light bg-info read-more" href="#">Read More</a>
+                        <a class="btn btn-secondary read-more" href="#">Read More</a>
                         <button type="button" class="btn btn-outline-danger delete-tip d-none">
                             <i class="bi bi-trash"></i> Delete
                         </button>

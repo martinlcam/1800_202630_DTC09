@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Agrave+Pro:wght@100..700&family=Dosis:wght@200..800&display=swap');
+
+:root {
+    /* ---------- 1. Our design palette ----------
+       Same variable names for everyone. Global.
+       Customize colours and font HERE only. */
+
+    /* 60% Background */
+    --background: #E1F5FE;
+
+    /* 30% Primary and secondary */
+    --primary: #06718a;
+    --secondary: #5f99a4;
+
+    /* 10% Accent */
+    --accent: #E39E8E;
+
+    /* Font (import from Google Fonts first) */
+    --font: "Dosis", system-ui, sans-serif;
+
+    /* ---------- 2. Bootstrap variables ----------
+       Connect Bootstrap to OUR design choices. */
+
+    /* Page background */
+    --bs-body-bg: var(--background);
+
+    /* Font for the whole page */
+    --bs-body-font-family: var(--font);
+}
+
+/* ---------- 3. Bootstrap colour utilities ----------
+   Override Bootstrap's default colours with OUR colours.
+   !important is needed to override Bootstrap utilities. */
+
+.bg-primary {
+    background-color: var(--primary) !important;
+}bs-
+.text-primary {
+    color: var(--primary) !important;
+}
+
+.bg-secondary {
+    background-color: var(--secondary) !important;
+}
+
+.text-secondary {
+    color: var(--secondary) !important;
+}
+
+/* Use for badges and small highlights. */
+.bg-accent {
+    background-color: var(--accent);
+}
+/* ---------- 4. Bootstrap buttons ----------
+   Customize button background, border, and text colours.
+   Darken slightly on hover (desktop or demo purposes).
+   Keep the same colours when tapped (active). */
+
+/* Primary: Login, Make a Post, Add a Hike, Save */
+.btn-primary {
+    --bs-btn-bg: var(--primary);
+    --bs-btn-border-color: var(--primary);
+    --bs-btn-color: white;
+
+    /* When hovered over */
+    --bs-btn-hover-bg: color-mix(in srgb, var(--primary), black 25%);
+    --bs-btn-hover-border-color: var(--primary);
+    --bs-btn-hover-color: white;
+
+    /* When tapped */
+    --bs-btn-active-bg: var(--primary);
+    --bs-btn-active-border-color: var(--primary);
+    --bs-btn-active-color: white;
+}
+
+/* Secondary: Cancel, Back, Read More */
+.btn-secondary {
+    --bs-btn-bg: var(--secondary);
+    --bs-btn-border-color: var(--secondary);
+    --bs-btn-color: black;
+
+    /* When hovered over */
+    --bs-btn-hover-bg: color-mix(in srgb, var(--secondary), black 25%);
+    --bs-btn-hover-border-color: var(--secondary);
+    --bs-btn-hover-color: white;
+
+    /* When tapped */
+    --bs-btn-active-bg: var(--secondary);
+    --bs-btn-active-border-color: var(--secondary);
+    --bs-btn-active-color: black;
+}

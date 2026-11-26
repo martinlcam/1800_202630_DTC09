@@ -29,12 +29,12 @@
         <form id="addTipForm" novalidate>
             <div class="mb-3">
                 <label for="tipNameInput" class="form-label">Tip Name</label>
-                <input type="text" id="tipNameInput" class="form-control" required />
+                <input type="text" id="tipNameInput" class="form-control bg-white" required />
             </div>
 <div class="row g-3 my-4">
     <div class="col-md-4">
         <label for="categoryFilter" class="form-label">Filter by Category</label>
-        <select id="categoryFilter" class="form-select">
+        <select id="categoryFilter" class="form-select bg-white">
             <option value="Image">Image</option>
             <option value="Video">Video</option>
             <option value="Article">Article</option>
@@ -43,7 +43,7 @@
     </div>
     <div class="col-md-4">
         <label for="typeFilter" class="form-label">Filter by Type</label>
-        <select id="typeFilter" class="form-select">
+        <select id="typeFilter" class="form-select bg-white">
             <option value="AI">AI</option>
             <option value="Cybersecurity">Cybersecurity</option>
             <option value="Social Media">Social Media</option>
@@ -55,18 +55,18 @@
 <div id="tipsContainer" class="row g-4"></div>
             <div class="mb-3">
                 <label for="detailsInput" class="form-label">Details</label>
-                <textarea id="detailsInput" class="form-control" rows="3" placeholder="What tips do you have for spotting AI?"></textarea>
+                <textarea id="detailsInput" class="form-control bg-white" rows="3" placeholder="What tips do you have for spotting AI?"></textarea>
             </div>
             <div class="mb-3">
     <label for="imageInput" class="form-label">Add cover image (optional)</label>
-    <input type="file" id="imageInput" class="form-control" accept="image/*" />
+    <input type="file" id="imageInput" class="form-control bg-white" accept="image/*" />
     <img id="imagePreview" class="img-fluid rounded mt-2 d-none" alt="Preview" />
 </div>
 <div class="d-flex justify-content-center gap-2">
     <a href="main.html" id="cancelBtn" class="btn btn-outline-secondary">
         <i class="bi bi-x-lg me-1"></i>Cancel
     </a>
-    <button type="submit" id="saveBtn" class="btn btn-info">
+    <button type="submit" id="saveBtn" class="btn btn-secondary">
         <i class="bi bi-check-lg me-1"></i>Save
     </button>
 </div>

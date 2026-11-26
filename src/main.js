@@ -1,4 +1,5 @@
 import { onAuthReady } from '/src/authentication.js';
+
 import { db } from '/src/firebaseConfig.js';
 import {
   collection,
@@ -14,6 +15,87 @@ import {
 } from 'firebase/firestore';
 
 let currentUser = null;
+
+// Write tips to Firestore
+async function addTipData() {
+  // add tips to the firestore database
+  const tipsRef = collection(db, 'tips');
+  const tips = [
+    {
+      code: 'tip1',
+      name: 'Check Image Details',
+      category: 'Image',
+      details: 'Look for blurry edges, distorted objects, unusual fingers, or unnatural lighting.',
+    },
+    {
+      code: 'tip2',
+      name: 'Verify the Image Source',
+      category: 'Image',
+      details: 'Check whether the image comes from a trusted website or reliable source.',
+    },
+    {
+      code: 'tip3',
+      name: 'Caught in an image scam?',
+      category: 'Image',
+      details:
+        'Save evidence, Check images, protect yourself, Stop payments, Report it, Spread awareness.',
+    },
+    {
+      code: 'tip4',
+      name: 'Reverse Image Search',
+      category: 'Image',
+      details:
+        'Use reverse image search to find the original image and check where it was published.',
+    },
+    {
+      code: 'tip5',
+      name: 'Protect your photos',
+      category: 'Image',
+      details:
+        'Be careful when sharing personal photos onlin. Scammers may copy, edit, or misuse your images without permission. Review your privacy settings and limit who can access your photos.',
+    },
+    {
+      code: 'tip6',
+      name: 'Recognize Fake profiles',
+      category: 'Image',
+      details:
+        "Be cautious of accounts with stolen photos, very few posts, suspicious usernames, or inconsistent information. Verify the person's identity before trusting them.",
+    },
+    {
+      code: 'tip7',
+      name: 'Report Suspicious images',
+      category: 'Image',
+      details:
+        'If you discover a suspicious image, fake profile, or image scam, report iyt to the platform. Save evidence before blocking the account. Report can help protect other people too',
+    },
+    {
+      code: 'tip8',
+      name: 'Do not Trust Images Immediately',
+      category: 'Image',
+      details: 'Pause and verify before beleiving, sharing, or acting on an image.',
+    },
+  ];
+  // starts the try block to handle possible firestore errors
+  try {
+    const snapshot = await getDocs(tipsRef);
+    
+    // create a set containg the codes of tips already existing
+    const existingCodes = new Set(
+      snapshot.docs.map((tipDoc) => tipDoc.data().code)
+    );
+
+    for (const tip of tips) {
+      if (!existingCodes.has(tip.code)) {
+        await addDoc(tipsRef, tip);
+        existingCodes.add(tip.code);
+        console.log(`${tip.code} added!`);
+      }
+    }
+  } catch (error) {
+    console.error('Error adding tips:', error);
+  }
+}
+
 let favourites = [];
 
 function showName(name) {
@@ -85,7 +167,7 @@ async function displayCardsDynamically() {
   const container = document.getElementById('tips-go-here');
 
   try {
-    const querySnapshot = await getDocs(collection(db, "tips"));
+    const querySnapshot = await getDocs(collection(db, 'tips'));
 
     // text that shows up if there is an empty collection, otherwise it's just a blank page
     if (querySnapshot.empty) {
@@ -94,7 +176,8 @@ async function displayCardsDynamically() {
     querySnapshot.forEach((tipDoc) => {
       const tip = tipDoc.data();
       if (searchTerm) {
-        const haystack = `${tip.name || ""} ${tip.details || ""} ${tip.category|| ""} ${tip.type || ""}`.toLowerCase();
+        const haystack =
+          `${tip.name || ''} ${tip.details || ''} ${tip.category || ''} ${tip.type || ''}`.toLowerCase();
         if (!haystack.includes(searchTerm)) return; // skip this tip
       }
       shown++;
@@ -150,7 +233,6 @@ onAuthReady(async function (user) {
   }
 
   showName(displayName);
-
-
+  await addTipData();
   displayCardsDynamically();
 });
