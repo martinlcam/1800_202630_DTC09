@@ -28,7 +28,7 @@ class SiteNavbar extends HTMLElement {
     renderNavbar() {
         this.innerHTML = `
             <!-- Navbar: single source of truth -->
-            <nav class="navbar navbar-expand-lg navbar-light bg-info">
+            <nav class="navbar navbar-expand-lg bg-primary data-bs-theme = "dark">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="/main.html">
                         <img src="https://cdn-icons-png.flaticon.com/512/4078/4078029.png" height="36">
@@ -41,7 +41,7 @@ class SiteNavbar extends HTMLElement {
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto">
                             <li class="nav-item">
-                                <a class="nav-link" href="/main.html">Home</a>
+                                <a class="nav-linkq" href="/main.html">Home</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/addTip.html">Add a Tip</a>
