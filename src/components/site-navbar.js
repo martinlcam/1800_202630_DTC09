@@ -52,7 +52,7 @@ class SiteNavbar extends HTMLElement {
                         </ul>
                         <div class="d-flex align-items-center gap-2 ms-lg-2" id="rightControls">
                             <form class="d-flex align-items-center gap-2 my-2 my-lg-0" id="navSearch" role="search">
-                                <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                                <input class="form-control bg-light" type="search" placeholder="Search" aria-label="Search">
                                 <button class="btn btn-outline-light" type="submit">🔍︎</button>
                             </form>
                             <div id="authControls" class="auth-controls d-flex align-items-center gap-2 my-2 my-lg-0">

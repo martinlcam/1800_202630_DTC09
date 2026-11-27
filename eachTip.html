@@ -64,7 +64,7 @@
   <form id="commentForm" novalidate>
     <div class="mb-3">
       <label for="commentText" class="form-label" style="font-size: large;">Add a comment</label>
-      <textarea id="commentText" class="form-control" style="background-color: aliceblue;" rows="3" required></textarea>
+      <textarea id="commentText" class="form-control" style="background-color: #FFF;" rows="3" required></textarea>
     </div>
     <button type="submit" class="btn btn-info" style="margin-bottom: 45px;">Post comment</button>
   </form>
@@ -78,13 +78,13 @@
 <template id="commentTemplate">
   <div class="comment-node mb-2">
     <div class="card">
-      <div class="card-body">
+      <div class="card-body bg-light">
         <h5 class="card-title comment-title d-none"></h5>
         <h6 class="card-subtitle mb-2 text-muted comment-meta"></h6>
         <p class="card-text comment-text"></p>
 
        <div class="d-flex flex-wrap gap-2 align-items-center">
-        <button type="button" class="btn btn-sm btn-outline-succes like-btn">
+        <button type="button" class="btn btn-sm btn-outline-success like-btn">
           <i class="bi bi-hand-thumbs-up"></i> <span class="like-count">0</span>
         </button>
         <button type="button" class="btn btn-sm btn-outline-danger dislike-btn">
@@ -99,7 +99,7 @@
        </div>
 
         <form class="reply-form d-none mt-2" novalidate>
-          <textarea class="form-control form-control-sm mb-2 reply-input" rows="2"
+          <textarea class="form-control form-control-sm mb-2 reply-input bg-light" rows="2"
                     placeholder="Write a reply..."></textarea>
           <button type="submit" class="btn btn-sm btn-info">Post reply</button>
           <button type="button" class="btn btn-sm btn-secondary reply-cancel">Cancel</button>
